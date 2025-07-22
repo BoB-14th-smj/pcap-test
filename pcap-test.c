@@ -1,3 +1,5 @@
+#include <netinet/in.h>
+#include <string.h>
 #include <pcap/pcap.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -16,6 +18,61 @@ typedef struct {
 Param param = {
 	.device = NULL
 };
+
+typedef struct {
+	uint8_t destination_mac_address[6];
+	uint8_t source_mac_address[6];
+	uint16_t ether_type;
+} Ethernet;
+
+
+void print_ethernet_header(Ethernet* ethernet){
+
+	printf("===============Ethernet===============\n");
+
+	printf("DES MAC Address : ");
+	for (uint16_t i =0 ;i<6;i++){
+		printf("%02x ", ethernet->destination_mac_address[i]);
+	}
+	printf("\n");
+
+
+	printf("SRC MAC Address : ");
+	for (uint16_t i =0 ;i<6;i++){
+		printf("%02x ", ethernet->source_mac_address[i]);
+	}
+	printf("\n");
+
+	printf("ether type : 0x%04x\n", ethernet->ether_type);
+
+
+
+
+
+
+
+
+}
+
+Ethernet* get_ethernet_header(const u_char* packet){
+	Ethernet* ethernet;
+	ethernet = (Ethernet*) packet;
+	ethernet->ether_type = ntohs(ethernet->ether_type);
+	print_ethernet_header(ethernet);
+
+	return ethernet;
+}
+
+
+void analysis_packet(struct pcap_pkthdr* header, const u_char* packet){
+	Ethernet* ethernet = get_ethernet_header(packet);
+
+	if(ethernet->ether_type != 0x0800){
+		return ;
+	}
+
+}
+
 
 
 bool check_argu(Param* param, int argc, char* argv[]){
@@ -43,12 +100,15 @@ int main(int argc, char** argv){
 		struct pcap_pkthdr* header;
 		const u_char* packet;
 		int res = pcap_next_ex(pcap, &header, &packet);
-		if (res == 0) continue;
-		if (res == PCAP_ERROR || res == PCAP_ERROR_BREAK) {
+		if (res == 0){
+			continue; //time out
+		} else if(res <0){ // error
 			printf("pcap_next_ex return %d(%s)\n", res, pcap_geterr(pcap));
 			break;
 		}
-		printf("%u bytes captured\n", header->caplen);
+
+		analysis_packet(header, packet);
+		// printf("%u bytes captured\n", header->caplen);
 	}
 
 	pcap_close(pcap);

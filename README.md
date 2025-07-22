@@ -7,3 +7,17 @@ https://dev-hyonie.tistory.com/49
 pcap_open_live
 https://testkernelv2.tistory.com/259
 
+pcap_next_ex
+https://blog.naver.com/ndb796/221053782948
+https://kaspyx.tistory.com/14
+
+
+
+copy struct data
+https://kaspyx.tistory.com/14
+https://chatgpt.com/share/687f5e47-bd4c-8008-b5c9-df57849f83d3     -> GPT
+
+
+
+
+
