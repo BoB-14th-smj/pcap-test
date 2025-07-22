@@ -11,13 +11,16 @@ void usage(){
 	printf("sample: pcap-test wlan0\n");
 }
 
+
 typedef struct {
 	char* device;
 } Param;
 
+
 Param param = {
 	.device = NULL
 };
+
 
 typedef struct {
 	uint8_t destination_mac_address[6];
@@ -43,16 +46,10 @@ void print_ethernet_header(Ethernet* ethernet){
 	}
 	printf("\n");
 
-	printf("ether type : 0x%04x\n", ethernet->ether_type);
-
-
-
-
-
-
-
+	// printf("ether type : 0x%04x\n", ethernet->ether_type);
 
 }
+
 
 Ethernet* get_ethernet_header(const u_char* packet){
 	Ethernet* ethernet;
@@ -72,7 +69,6 @@ void analysis_packet(struct pcap_pkthdr* header, const u_char* packet){
 	}
 
 }
-
 
 
 bool check_argu(Param* param, int argc, char* argv[]){
