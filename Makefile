@@ -4,7 +4,7 @@ CXXFLAGS=-g
 all: $(TARGET)
 
 $(TARGET) : pcap-test.c
-	$(LINK.cpp) $^ $(LOADLIBES) $(LDLIBS) -o $@
+	$(LINK.cpp) $^ $(LOADLIBES) $(LDLIBS) -o $@ -lpcap
 
 clean:
 	rm -f $(TARGET)
