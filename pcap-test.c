@@ -1,37 +1,41 @@
-#include <pcap.h>
-#include <stdbool.h>
+#include <pcap/pcap.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdbool.h>
 
-void usage() {
+void usage(){
 	printf("syntax: pcap-test <interface>\n");
 	printf("sample: pcap-test wlan0\n");
 }
 
 typedef struct {
-	char* dev_;
+	char* device;
 } Param;
 
 Param param = {
-	.dev_ = NULL
+	.device = NULL
 };
 
-bool parse(Param* param, int argc, char* argv[]) {
-	if (argc != 2) {
+
+bool check_argu(Param* param, int argc, char* argv[]){
+	if (argc != 2){
 		usage();
 		return false;
 	}
-	param->dev_ = argv[1];
+	param->device = argv[1];
 	return true;
 }
 
-int main(int argc, char* argv[]) {
-	if (!parse(&param, argc, argv))
+int main(int argc, char** argv){
+	if(!check_argu(&param,argc ,argv)){
 		return -1;
+	}
 
 	char errbuf[PCAP_ERRBUF_SIZE];
-	pcap_t* pcap = pcap_open_live(param.dev_, BUFSIZ, 1, 1000, errbuf);
+	pcap_t* pcap = pcap_open_live(param.device, BUFSIZ, 1, 1000, errbuf);
 	if (pcap == NULL) {
-		fprintf(stderr, "pcap_open_live(%s) return null - %s\n", param.dev_, errbuf);
+		fprintf(stderr, "pcap_open_live(%s) return null - %s\n", param.device, errbuf);
 		return -1;
 	}
 
@@ -48,4 +52,6 @@ int main(int argc, char* argv[]) {
 	}
 
 	pcap_close(pcap);
+
+
 }
