@@ -28,17 +28,30 @@ typedef struct {
 	uint16_t ether_type;
 } Ethernet;
 
+typedef struct{
+	uint8_t version : 4;
+	uint8_t header_length : 4;
+	uint8_t dscp : 6;
+	uint8_t ecn : 2;
+
+	uint16_t tolal_length;
+	uint16_t identification;
+	uint16_t flags : 3;
+	uint16_t fragment_offset : 13;
+
+	uint8_t ttl;
+	uint8_t protocol;
+	uint16_t header_checksum;
+
+	uint32_t source_ip_address;
+	uint32_t destination_ip_address;
+}Ip;
+
+
 
 void print_ethernet_header(Ethernet* ethernet){
 
 	printf("===============Ethernet===============\n");
-
-	printf("DES MAC Address : ");
-	for (uint16_t i =0 ;i<6;i++){
-		printf("%02x ", ethernet->destination_mac_address[i]);
-	}
-	printf("\n");
-
 
 	printf("SRC MAC Address : ");
 	for (uint16_t i =0 ;i<6;i++){
@@ -46,7 +59,39 @@ void print_ethernet_header(Ethernet* ethernet){
 	}
 	printf("\n");
 
+	printf("DES MAC Address : ");
+	for (uint16_t i =0 ;i<6;i++){
+		printf("%02x ", ethernet->destination_mac_address[i]);
+	}
+	printf("\n");
+
 	// printf("ether type : 0x%04x\n", ethernet->ether_type);
+
+}
+
+void print_ip_address(uint32_t ip_address){
+	uint32_t data = ip_address;
+	uint32_t mask = 0xFF000000;
+	uint32_t result = 0;
+	for (uint16_t i =0; i<4 ; i++){
+		result =  data & (mask >> i*8);
+		printf("%d", result >> (3-i)*8);
+		if(i!=3){
+			printf(".");
+		}
+
+	}
+	printf("\n");
+
+}
+
+void print_ip_header(Ip* ip){
+	printf("==================IP==================\n");
+	printf("SRC IP Address : ");
+	print_ip_address(ip->source_ip_address);
+	printf("DES IP Address : ");
+	print_ip_address(ip->destination_ip_address);
+
 
 }
 
@@ -55,18 +100,38 @@ Ethernet* get_ethernet_header(const u_char* packet){
 	Ethernet* ethernet;
 	ethernet = (Ethernet*) packet;
 	ethernet->ether_type = ntohs(ethernet->ether_type);
-	print_ethernet_header(ethernet);
-
 	return ethernet;
 }
 
 
+
+Ip* get_ip_header(const u_char* packet){
+	Ip* ip;
+	ip = (Ip*) packet;
+
+	// printf("%08x\n",ip->tolal_length);
+	// uint8_t header_length = ip->tolal_length;
+	// printf("%08x\n", ip->tolal_length);
+	ip->source_ip_address = ntohl(ip->source_ip_address);
+	ip->destination_ip_address = ntohl(ip->destination_ip_address);
+
+	return ip;
+}
+
+
+
 void analysis_packet(struct pcap_pkthdr* header, const u_char* packet){
 	Ethernet* ethernet = get_ethernet_header(packet);
+	print_ethernet_header(ethernet);
 
-	if(ethernet->ether_type != 0x0800){
-		return ;
-	}
+	// if(ethernet->ether_type != 0x0800){
+	// 	return ;
+	// }
+
+	packet = packet + 14;
+	Ip* ip = get_ip_header(packet);
+	print_ip_header(ip);
+
 
 }
 
