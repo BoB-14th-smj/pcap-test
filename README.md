@@ -12,10 +12,20 @@
 - https://kaspyx.tistory.com/14
 
 
-
-### copy struct data
+### type casting
+- https://hello-dot.tistory.com/47
 - https://kaspyx.tistory.com/14
-- https://chatgpt.com/share/687f5e47-bd4c-8008-b5c9-df57849f83d3     -> GPT
+- https://dojang.io/mod/page/view.php?id=496
+
+
+
+### bit var 
+- https://dojang.io/mod/page/view.php?id=472
+- https://dev-nicitis.tistory.com/57
+
+
+
+
 
 
 
