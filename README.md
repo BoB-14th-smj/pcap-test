@@ -25,6 +25,9 @@
 
 
 
+### make header
+- https://www.dotnetkorea.com/docs/c-language/header-file/
+- https://dojang.io/mod/page/view.php?id=681
 
 
 
