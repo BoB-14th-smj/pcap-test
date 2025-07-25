@@ -27,11 +27,11 @@ void print_tcp_header(Tcp* tcp){
     printf("%d\n", tcp->source_port);
     printf("DES Port : ");
     printf("%d\n", tcp->destination_port);
-
+/*
     printf("%u\n", ntohl(tcp->sequence_number));
     printf("%u\n",ntohl( tcp->acknoledgement_number));
     // print_tcp_bit(tcp->data_offset);
-    printf("%d\n", tcp->data_offset);
+    printf("%d\n", tcp->data_offset);*/
 }
 
 
