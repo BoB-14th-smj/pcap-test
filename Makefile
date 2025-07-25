@@ -1,5 +1,5 @@
 TARGET=pcap-test
-CXXFLAGS=-g
+CXXFLAGS=-g -Wall
 
 all: $(TARGET)
 
