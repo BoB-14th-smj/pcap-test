@@ -41,35 +41,58 @@ void print_bit(uint8_t value){
 
 }
 
+uint16_t check_ip_tcp(Ethernet* ethernet, Ip* ip){
+	if(ethernet->ether_type != 0x0800){
+		return 0;
+	}
+	if(ip->protocol !=0x06){
+		return 0;
+	}
+
+	return 1;
+
+}
 void analysis_packet(struct pcap_pkthdr* header, const u_char* packet){
 
 	//==================ETHERNET======================
 	Ethernet* ethernet = get_ethernet_header(packet);
-	if(ethernet->ether_type != 0x0800){
-		return ;
-	}
-	print_ethernet_header(ethernet);
 	packet = packet + 14;
 
 
 
 	//==================IP======================
 	Ip* ip = get_ip_header(packet);
-	print_ip_header(ip);
 	uint16_t total_length = ip->tolal_length;
-
-	// TODO -> TCP CHECK
 
 
 	uint16_t tcp_offset_0 = (ip->header_length)*4;
 	packet = packet + tcp_offset_0;
 
 
+	if(!check_ip_tcp(ethernet,ip)){
+		return;
+	}
+
+
 	//==================TCP======================
+
+
 	Tcp* tcp = get_tcp_header(packet);
-	print_tcp_header(tcp);
 	uint16_t data_offset_0 = (tcp->data_offset)*4;
 	packet = packet + data_offset_0;
+
+
+
+	//==================DATA======================
+
+
+	//==================PRINT======================
+
+	print_ethernet_header(ethernet);
+	print_ip_header(ip);
+	print_tcp_header(tcp);
+
+
 
 
 
