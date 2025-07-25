@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include "ethernet.h"
 #include "ip.h"
+#include "tcp.h"
 
 void usage(){
 	printf("syntax: pcap-test <interface>\n");
@@ -23,20 +24,58 @@ Param param = {
 	.device = NULL
 };
 
+void print_bit(uint8_t value){
+	uint8_t filter = 0x80;
 
+	for(uint8_t i=0 ;i<8;i++){
+		if(value & filter){
+			printf("1");
+		}
+		else{
+			printf("0");
+		}
+		filter = filter >> 1;
+
+	}
+	printf("\n");
+
+}
 
 void analysis_packet(struct pcap_pkthdr* header, const u_char* packet){
+
+	//==================ETHERNET======================
 	Ethernet* ethernet = get_ethernet_header(packet);
+	if(ethernet->ether_type != 0x0800){
+		return ;
+	}
 	print_ethernet_header(ethernet);
-
-	// if(ethernet->ether_type != 0x0800){
-	// 	return ;
-	// }
-
 	packet = packet + 14;
+
+
+
+	//==================IP======================
 	Ip* ip = get_ip_header(packet);
 	print_ip_header(ip);
+	uint16_t total_length = ip->tolal_length;
 
+	// TODO -> TCP CHECK
+
+
+	uint16_t tcp_offset_0 = (ip->header_length)*4;
+	packet = packet + tcp_offset_0;
+
+
+	//==================TCP======================
+	Tcp* tcp = get_tcp_header(packet);
+	print_tcp_header(tcp);
+	uint16_t data_offset_0 = (tcp->data_offset)*4;
+	packet = packet + data_offset_0;
+
+
+
+
+
+	// packet = packet + (total_length - tcp_offset_0 - tcp_length);
 
 }
 
