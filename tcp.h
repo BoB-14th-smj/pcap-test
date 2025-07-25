@@ -25,4 +25,3 @@ typedef struct{
 
 Tcp* get_tcp_header(const u_char* packet);
 void print_tcp_header(Tcp* tcp);
-void print_tcp_bit(uint8_t value);

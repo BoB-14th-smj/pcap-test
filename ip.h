@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <pcap/pcap.h>
 
+
+//Detail2~3. struct
 typedef struct{
     uint8_t header_length : 4;
     uint8_t version : 4;

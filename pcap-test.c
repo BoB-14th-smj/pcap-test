@@ -29,7 +29,7 @@ typedef struct {
 	uint8_t data_value[21];
 } Data;
 
-
+//task 4 - print payload hex
 void print_data(Data* data){
 	printf("==================DATA==================\n");
 	if(data->data_value[0] == '\0'){
@@ -47,24 +47,7 @@ void print_data(Data* data){
 
 }
 
-void print_bit(uint8_t value){
-	uint8_t filter = 0x80;
-
-	for(uint8_t i=0 ;i<8;i++){
-		if(value & filter){
-			printf("1");
-		}
-		else{
-			printf("0");
-		}
-		filter = filter >> 1;
-
-	}
-	printf("\n");
-
-}
-
-
+//Detail1. only TCP
 uint16_t check_ip_tcp(Ethernet* ethernet, Ip* ip){
 	if(ethernet->ether_type != 0x0800){
 		return 0;
@@ -115,8 +98,13 @@ void analysis_packet(struct pcap_pkthdr* header, const u_char* packet){
 
 	//==================PRINT======================
 
+	//task 1 . src mac/ dst mac
 	print_ethernet_header(ethernet);
+
+	//task2. src ip / dst ip
 	print_ip_header(ip);
+
+	//task 3. src port / dst port
 	print_tcp_header(tcp);
 	print_data(data);
 
