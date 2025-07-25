@@ -3,15 +3,17 @@
 #include <pcap/pcap.h>
 
 typedef struct{
-    uint8_t version : 4;
     uint8_t header_length : 4;
-    uint8_t dscp : 6;
+    uint8_t version : 4;
     uint8_t ecn : 2;
+    uint8_t dscp : 6;
+
 
     uint16_t tolal_length;
     uint16_t identification;
-    uint16_t flags : 3;
     uint16_t fragment_offset : 13;
+    uint16_t flags : 3;
+
 
     uint8_t ttl;
     uint8_t protocol;

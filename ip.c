@@ -39,6 +39,7 @@ Ip* get_ip_header(const u_char* packet){
     // printf("%08x\n", ip->tolal_length);
     ip->source_ip_address = ntohl(ip->source_ip_address);
     ip->destination_ip_address = ntohl(ip->destination_ip_address);
+    ip->tolal_length = ntohs(ip->tolal_length);
 
     return ip;
 }
