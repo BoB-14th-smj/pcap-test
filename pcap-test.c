@@ -19,10 +19,33 @@ typedef struct {
 	char* device;
 } Param;
 
-
 Param param = {
 	.device = NULL
 };
+
+
+
+typedef struct {
+	uint8_t data_value[21];
+} Data;
+
+
+void print_data(Data* data){
+	printf("==================DATA==================\n");
+	if(data->data_value[0] == '\0'){
+		printf("No Data\n");
+		return;
+	}
+
+	for(uint16_t i = 0 ; i < 20 ; i++){
+		uint8_t now = data->data_value[i];
+		if(now != '\0'){
+			printf("%x ", now);
+		}
+	}
+	printf("\n");
+
+}
 
 void print_bit(uint8_t value){
 	uint8_t filter = 0x80;
@@ -40,6 +63,7 @@ void print_bit(uint8_t value){
 	printf("\n");
 
 }
+
 
 uint16_t check_ip_tcp(Ethernet* ethernet, Ip* ip){
 	if(ethernet->ether_type != 0x0800){
@@ -84,6 +108,9 @@ void analysis_packet(struct pcap_pkthdr* header, const u_char* packet){
 
 
 	//==================DATA======================
+	Data* data = (Data*) packet;
+	uint32_t data_length =  total_length - tcp_offset_0 - data_offset_0;
+
 
 
 	//==================PRINT======================
@@ -91,6 +118,10 @@ void analysis_packet(struct pcap_pkthdr* header, const u_char* packet){
 	print_ethernet_header(ethernet);
 	print_ip_header(ip);
 	print_tcp_header(tcp);
+	print_data(data);
+
+	printf("\n");
+	printf("\n");
 
 
 
@@ -98,7 +129,7 @@ void analysis_packet(struct pcap_pkthdr* header, const u_char* packet){
 
 
 
-	// packet = packet + (total_length - tcp_offset_0 - tcp_length);
+
 
 }
 
