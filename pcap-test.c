@@ -30,14 +30,27 @@ typedef struct {
 } Data;
 
 //task 4 - print payload hex
-void print_data(Data* data){
+void print_data(Data* data, uint32_t data_length){
 	printf("==================DATA==================\n");
-	if(data->data_value[0] == '\0'){
-		printf("No Data\n");
-		return;
+
+	//check data
+	if(data_length <=0){
+			printf("No Data\n");
+			return;
 	}
 
-	for(uint16_t i = 0 ; i < 20 ; i++){
+	//set range
+	uint8_t limit;
+	if (data_length >=20){
+		limit = 20;
+	}
+	else{
+		limit = data_length;
+	}
+
+
+
+	for(uint16_t i = 0 ; i < limit ; i++){
 		uint8_t now = data->data_value[i];
 		if(now != '\0'){
 			printf("%x ", now);
@@ -96,6 +109,7 @@ void analysis_packet(struct pcap_pkthdr* header, const u_char* packet){
 
 
 
+
 	//==================PRINT======================
 
 	//task 1 . src mac/ dst mac
@@ -106,7 +120,7 @@ void analysis_packet(struct pcap_pkthdr* header, const u_char* packet){
 
 	//task 3. src port / dst port
 	print_tcp_header(tcp);
-	print_data(data);
+	print_data(data, data_length);
 
 	printf("\n");
 	printf("\n");
